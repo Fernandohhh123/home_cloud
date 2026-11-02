@@ -1,0 +1,18 @@
+services:
+  web:
+    image: nginx:bookworm
+    container_name: home_cloud
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./src/database:/srv/cloud/data/
+    depends_on:
+      - php
+
+  php:
+    build: .
+    image: home_cloud
+    volumes:
+      - ./src:/var/www/html
