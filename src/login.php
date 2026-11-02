@@ -40,7 +40,7 @@
         # comprobamos la contraseña
         # EN ESTE CASO SOLO ES TEXTO PLANDO DESDE LA DB
         if($password === $user['password']){
-            echo "Bienvenido. <br>";
+            header('Location: inicio.html');
         } else {
             exit("Contraseña incorrecta.<br><a href='index.html'>Volver</a>");
         }
