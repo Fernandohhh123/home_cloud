@@ -20,10 +20,10 @@ session_start();
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <title>Home cloud - Inicio</title>
-</head>
-<body>
-    <h1>Bienvenido <?php echo htmlspecialchars($usuario_actual, ENT_QUOTES, 'UTF-8'); ?> </h1>
-</body>
+    <head>
+        <title>Home cloud - Inicio</title>
+    </head>
+    <body>
+        <h1>Bienvenido <?php echo htmlspecialchars($usuario_actual, ENT_QUOTES, 'UTF-8'); ?> </h1>
+    </body>
 </html>
