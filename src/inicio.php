@@ -6,14 +6,24 @@ session_start();
         exit;
     }
 
-    $usuario_actual = $_SESSION['nombre_usuario'];
+    $usuario_actual = basename($_SESSION['nombre_usuario']);
+
+    # Asignamos el directorio al usuario
+    $user_dir = "/srv/cloud/users/" . $usuario_actual . "/";
+
+    # Creamos la carpeta en caso de que no exista
+    if(!is_dir($user_dir)){
+        mkdir($user_dir, 0755, true);
+    }
+
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-
+<head>
     <title>Home cloud - Inicio</title>
-
-    <h1>Bienvenido <?php echo $_SESSION['nombre_usuario']; ?> </h1>
-
+</head>
+<body>
+    <h1>Bienvenido <?php echo htmlspecialchars($usuario_actual, ENT_QUOTES, 'UTF-8'); ?> </h1>
+</body>
 </html>
