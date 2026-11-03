@@ -1,18 +1,14 @@
 <?php
-    #phpinfo();
-    echo "Validando datos...<br>";
 
     # Validamos el login de forma correcta
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
+    # Eliminamos los espacios al princupio o al final
+
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
     if (empty($username) || empty($password)) {
         exit("Debe completar los campos");
     }
-
-    # Eliminamos los espacios
-    #$username = trim($_POST['username']);
-    # $password = trim($_POST['password']);
 
     if($username ==="" || $password ===""){
         exit("Campos vacios");
@@ -39,11 +35,24 @@
 
         # comprobamos la contraseña
         # EN ESTE CASO SOLO ES TEXTO PLANDO DESDE LA DB
-        if($password === $user['password']){
-            header('Location: inicio.html');
+        # Si todo esta bien, se complira el inicio de sesion
+        #  es mejor usar esto: password_verify($password, $user['password'])
+        #  pero solo si la contraseña esta cifrada
+        if($password == $user['password']){
+
+            session_start();
+
+            $_SESSION['usuario_autenticado'] = true;
+            $_SESSION['nombre_usuario'] = $username;
+
+            header('Location: inicio.php');
+
+            exit;
+
         } else {
             exit("Contraseña incorrecta.<br><a href='index.html'>Volver</a>");
         }
+
 
         /*
          * IMPORTANTE (Seguridad futura):
