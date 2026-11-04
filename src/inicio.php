@@ -16,6 +16,21 @@ session_start();
         mkdir($user_dir, 0755, true);
     }
 
+    # Subir un archivo
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['mi_archivo'])){
+        $nombre_original = $_FILES['mi_archivo']['name'];
+        $temporal = $_FILES['mi_archivo']['tmp_name'];
+
+        $destino = $user_dir . '/' . basename($nombre_original);
+
+        if(move_uploaded_file($temporal, $destino)){
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit;
+        } else {
+            echo "Error al subir el archivo";
+        }
+    } 
+
 ?>
 
 <!DOCTYPE html>
@@ -24,15 +39,14 @@ session_start();
         <title>Home cloud - Inicio</title>
     </head>
     <body>
-        <h1>Bienvenido <?php echo htmlspecialchars($usuario_actual, ENT_QUOTES, 'UTF-8'); ?> </h1>
+        <h1>Bienvenido, <?php echo htmlspecialchars($usuario_actual, ENT_QUOTES, 'UTF-8'); ?> </h1>
 
         <form action="" method="POST" enctype="multipart/form-data">
             <button type="submit">Subir archivo</button>
             <br>
-            <label>
-                Seleccionar archivo                
-                <input type="file" name="Mi_archivo">
-            </label>
+            <br>
+            <input type="file" name="mi_archivo" required>
+            <br>
         </form>
 
         <?php
@@ -45,7 +59,13 @@ session_start();
                 echo "<ul>";
 
                 foreach ($archivos as $archivo){
-                    echo "<li>$archivo</li>";
+                    if($archivo === '.' || $archivo === ".."){
+                        continue;
+                    }
+
+                    $ruta_archivo = "/srv/cloud/users/" . $usuario_actual . "/" . $archivo;
+
+                    echo "<li><a href='$ruta_archivo' download>$archivo</a></li>";
                 }
 
                 echo "<ul>";
