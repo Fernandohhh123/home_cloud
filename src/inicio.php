@@ -31,6 +31,30 @@ session_start();
         }
     } 
 
+    # Subir un directorio
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivos_carpeta'])){
+        
+        $dir_archivos_de_la_carpeta = $_FILES['archivos_carpeta'];
+
+        for($i = 0; $i < count($dir_archivos_de_la_carpeta['name']); $i++){
+            $dir_nombre_temporal = $dir_archivos_de_la_carpeta['tmp_name'][$i];
+            $dir_ruta_relativa = $dir_archivos_de_la_carpeta['full_path'][$i];
+            if (empty($dir_ruta_relativa)){
+                $dir_ruta_relativa = $dir_archivos_de_la_carpeta['name'][$i];
+            }
+            $dir_destino = $user_dir . '/' . $dir_ruta_relativa;
+            $dir_directorio_destino = dirname($dir_destino);
+            if(!is_dir($dir_directorio_destino)){
+                mkdir($dir_directorio_destino, 0755, true);
+            }
+            if($dir_nombre_temporal != ""){
+                move_uploaded_file($dir_nombre_temporal, $dir_destino);
+            }
+        } # for
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
+    } # subir un directorio
+
 ?>
 
 <!DOCTYPE html>
@@ -44,8 +68,16 @@ session_start();
         <form action="" method="POST" enctype="multipart/form-data">
             <button type="submit">Subir archivo</button>
             <br>
-            <br>
             <input type="file" name="mi_archivo" required>
+            <br>
+        </form>
+
+        <br>
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            <button type="submit">Subir carpeta</button>
+            <br>
+            <input type="file" name="archivos_carpeta[]" webkitdirectory multiple required>
             <br>
         </form>
 
@@ -55,7 +87,7 @@ session_start();
                 # Tomamos los archivos de la carpeta
                 $archivos = scandir($user_dir);
 
-                echo "<h2>Contenido</h2>";
+                echo "<h2>Mis archivos</h2>";
                 echo "<ul>";
 
                 foreach ($archivos as $archivo){
