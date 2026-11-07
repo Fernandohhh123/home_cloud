@@ -16,20 +16,35 @@ session_start();
         mkdir($user_dir, 0755, true);
     }
 
-    # Subir un archivo
-    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['mi_archivo'])){
-        $nombre_original = $_FILES['mi_archivo']['name'];
-        $temporal = $_FILES['mi_archivo']['tmp_name'];
+    # Subir uno o varios archivos
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['mis_archivos'])) {
 
-        $destino = $user_dir . '/' . basename($nombre_original);
+        $multiples_archivos = $_FILES['mis_archivos'];
 
-        if(move_uploaded_file($temporal, $destino)){
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit;
-        } else {
-            echo "Error al subir el archivo";
+        for ($i = 0; $i < count($multiples_archivos['name']); $i++) {
+
+            if ($multiples_archivos['error'][$i] !== UPLOAD_ERR_OK) {
+                echo "Error al subir el archivo: " .
+                    htmlspecialchars($multiples_archivos['name'][$i]);
+                continue;
+            }
+
+            $nombre_original = basename(
+                str_replace('\\', '/', $multiples_archivos['name'][$i])
+            );
+
+            $temporal = $multiples_archivos['tmp_name'][$i];
+
+            $destino = $user_dir . $nombre_original;
+
+            if (!move_uploaded_file($temporal, $destino)){
+                echo "No se pudo subir: " . htmlspecialchars($nombre_original) . "<br>";
+            }
         }
-    } 
+
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
+    }
 
     # Subir un directorio
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivos_carpeta'])){
@@ -68,7 +83,7 @@ session_start();
         <form action="" method="POST" enctype="multipart/form-data">
             <button type="submit">Subir archivo</button>
             <br>
-            <input type="file" name="mi_archivo" required>
+            <input type="file" name="mis_archivos[]" multiple required>
             <br>
         </form>
 

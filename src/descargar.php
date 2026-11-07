@@ -2,9 +2,6 @@
 
 session_start();
 
-
-
-
 // 1. Verificar autenticación
 if (
     !isset($_SESSION['usuario_autenticado']) ||
