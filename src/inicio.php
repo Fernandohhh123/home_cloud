@@ -82,30 +82,49 @@ session_start();
         </form>
 
         <?php
+
+            # Listar archivos del usuario
+            $subcarpeta_actual = isset($_GET['dir']) ? $_GET['dir'] : '';
+            $subcarpeta_actual = str_replace('..', '', $subcarpeta_actual);
+
+            $ruta_explorar = rtrim($user_dir . '/' . $subcarpeta_actual, '/');
+
             # verificamos si es una carpeta la ruta
-            if(is_dir($user_dir)){
+            if(is_dir($ruta_explorar)){
                 # Tomamos los archivos de la carpeta
-                $archivos = scandir($user_dir);
+                $archivos = scandir($ruta_explorar);
 
                 echo "<h2>Mis archivos</h2>";
                 echo "<ul>";
+
+                # boton para retrpceder de un directorio
+                if($subcarpeta_actual != ''){
+                    $dir_padre = dirname($subcarpeta_actual);
+                    $url_padre = ($dir_padre === '.' || $dir_padre === '') ? $_SERVER['PHP_SELF'] : $_SERVER['PHP_SELF'] . '?dir=' . urldecode($dir_padre);
+                    echo "<li><a href='$url_padre'> <strong>[ <- Volver]</strong></a></li>";
+                }
 
                 foreach ($archivos as $archivo){
                     if($archivo === '.' || $archivo === ".."){
                         continue;
                     }
 
-                    $ruta_archivo = "/srv/cloud/users/" . $usuario_actual . "/" . $archivo;
-
-                    echo "<li><a href='$ruta_archivo' download>$archivo</a></li>";
+                    $ruta_fisica = $ruta_explorar . '/' . $archivo;
+                    $ruta_relativa_elemento = ($subcarpeta_actual === '') ? $archivo : $subcarpeta_actual . '/' . $archivo;
+                    
+                    if(is_dir($ruta_fisica)){
+                        echo "<li> <a href='?dir=" . urlencode($ruta_relativa_elemento) . "'>" . htmlspecialchars($archivo) . "</a>/</li>";
+                    } else {
+                        echo "<li> <a href='descargar.php?file=" . urlencode($ruta_relativa_elemento) . "'>" . htmlspecialchars($archivo) . "</a></li>";
+                    }
                 }
 
-                echo "<ul>";
+                echo "</ul>";
 
             } else {
                 echo "La carpeta no existe o no se puede leer";
             }
-
+            
         ?>
 
     </body>

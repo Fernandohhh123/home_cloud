@@ -1,50 +1,70 @@
 <?php
+
 session_start();
-// Verificamos que el usuario haya iniciado sesión
-if (!isset($_SESSION['usuario'])) {
+
+
+
+
+// 1. Verificar autenticación
+if (
+    !isset($_SESSION['usuario_autenticado']) ||
+    $_SESSION['usuario_autenticado'] !== true ||
+    !isset($_SESSION['nombre_usuario'])
+) {
     http_response_code(403);
-    die("Acceso denegado.");
+    exit("Acceso denegado.");
 }
 
-$usuario_actual = $_SESSION['usuario'];
-$user_dir = "/srv/cloud/users/" . $usuario_actual . "/";
+// 2. Directorio del usuario
+$usuario_actual = basename($_SESSION['nombre_usuario']);
 
-// 2. Verificamos que se haya enviado el parámetro del archivo por la URL
-if (isset($_GET['file'])) {
-    $archivo_solicitado = $_GET['file'];
-    
-    // Seguridad básica: evitamos que intenten salir de la carpeta principal usando '..'
-    $archivo_solicitado = str_replace('..', '', $archivo_solicitado);
-    
-    // Ruta física completa del archivo dentro del servidor
-    $ruta_completa = $user_dir . '/' . $archivo_solicitado;
+$user_dir = "/srv/cloud/users/" . $usuario_actual;
 
-    // 3. Verificamos que el archivo exista realmente en el disco
-    if (file_exists($ruta_completa) && is_file($ruta_completa)) {
-        
-        // Limpiamos cualquier búfer previo para evitar corrupción en la descarga
-        if (ob_get_level()) {
-            ob_end_clean();
-        }
+$directorio_real = realpath($user_dir);
 
-        // Forzamos las cabeceras HTTP para que el navegador sepa que es una descarga
-        header('Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . basename($ruta_completa) . '"');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($ruta_completa));
-
-        // Leemos el archivo del servidor y lo enviamos al navegador del usuario
-        readfile($ruta_completa);
-        exit;
-    } else {
-        http_response_code(404);
-        echo "Error: El archivo no existe.";
-    }
-} else {
+// 3. Verificar parámetro
+if (!isset($_GET['file']) || !is_string($_GET['file'])) {
     http_response_code(400);
-    echo "Error: Petición inválida.";
+    exit("Petición inválida.");
 }
+
+// 4. Resolver ruta del archivo
+$archivo_solicitado = $_GET['file'];
+
+$ruta_completa = realpath(
+    $directorio_real . '/' . $archivo_solicitado
+);
+
+// 5. Verificar que el archivo pertenece al usuario
+if (
+    $directorio_real === false ||
+    $ruta_completa === false ||
+    !is_file($ruta_completa) ||
+    strpos($ruta_completa, $directorio_real . DIRECTORY_SEPARATOR) !== 0
+) {
+    http_response_code(404);
+    exit("Archivo no encontrado.");
+}
+
+// 6. Preparar descarga
+$nombre_archivo = basename($ruta_completa);
+
+while (ob_get_level() > 0) {
+    ob_end_clean();
+}
+
+// 7. Cabeceras HTTP
+header('Content-Type: application/octet-stream');
+header(
+    'Content-Disposition: attachment; filename="' .
+    addcslashes($nombre_archivo, '"\\') .
+    '"; filename*=UTF-8\'\'' . rawurlencode($nombre_archivo)
+);
+header('Content-Length: ' . filesize($ruta_completa));
+header('Cache-Control: no-store');
+
+// 8. Enviar archivo
+readfile($ruta_completa);
+exit;
+
 ?>
