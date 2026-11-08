@@ -1,0 +1,113 @@
+
+/* Configuración general */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f1f3f4;
+    color: #202124;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Título principal */
+h1 {
+    color: #4285f4;
+    font-size: 36px;
+    font-weight: 500;
+    margin-bottom: 25px;
+}
+
+/* Tarjeta del formulario */
+form {
+    background-color: #f0efef;
+    width: 380px;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Título del formulario */
+form h2 {
+    font-size: 26px;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+/* Etiquetas */
+form p {
+    font-size: 18px;
+    color: #434549;
+    margin-bottom: 8px;
+}
+
+/* Campos de entrada */
+form input {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    font-size: 18px;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+/* Cuando seleccionamos un campo */
+form input:focus {
+    border: 2px solid #1a73e8;
+    padding: 12px;
+    box-shadow: 0 0 0 1px rgba(26, 115, 232, 0.1);
+}
+
+/* Botón de entrar */
+form button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 7px;
+    background-color: #0a61d4;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+form button:hover {
+    background-color: #1765cc;
+}
+
+/* Botón cambiar contraseña */
+body > input[type="submit"] {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    color: #1a73e8;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+body > input[type="submit"]:hover {
+    text-decoration: underline;
+}
+
+/* Adaptación para móviles */
+@media (max-width: 450px) {
+    form {
+        width: calc(100% - 32px);
+        padding: 28px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+}

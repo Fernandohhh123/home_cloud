@@ -1,0 +1,221 @@
+/* =================================
+   CONFIGURACIÓN GENERAL
+================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 30px 45px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f8fafd;
+    color: #202124;
+}
+
+/* =================================
+   ENCABEZADO
+================================= */
+
+h1 {
+    font-size: 25px;
+    font-weight: 400;
+    margin: 0 0 30px 0;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #dadce0;
+}
+
+/* =================================
+   FORMULARIOS Y BOTONES
+================================= */
+
+form {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    vertical-align: top;
+    background-color: #ffffff;
+    padding: 18px;
+    margin: 0 15px 25px 0;
+    border: 1px solid #dadce0;
+    border-radius: 12px;
+    min-width: 250px;
+    gap: 12px;
+}
+
+form button {
+    background-color: #0b57d0;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+form button:hover {
+    background-color: #0842a0;
+}
+
+form input[type="file"] {
+    max-width: 230px;
+    font-size: 13px;
+    color: #5f6368;
+}
+
+/* =================================
+   EXPLORADOR DE ARCHIVOS
+================================= */
+
+h2 {
+    font-size: 20px;
+    font-weight: 350;
+    margin: 25px 0 15px;
+}
+
+/* Lista de archivos */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Elementos de la lista y menú de tres puntos */
+li {
+    background-color: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 10px;
+    padding: 15px 18px;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+li:hover {
+    background-color: #edf2fc;
+    border-color: #a8c7fa;
+}
+
+/* Enlace principal de archivo o carpeta */
+li > a:first-child {
+    color: #3c4043;
+    text-decoration: none;
+    font-size: 14px;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 15px;
+}
+
+li > a:first-child:hover {
+    color: #0b57d0;
+}
+
+/* Botón para regresar ([ <- Volver]) */
+li:first-child:has(strong) {
+    background-color: #e8f0fe;
+    border-color: transparent;
+}
+
+li:first-child:has(strong) a {
+    color: #0b57d0;
+    font-weight: 500;
+}
+
+/* =================================
+   MENÚ DE OPCIONES (TRES PUNTOS)
+================================= */
+
+.menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #5f6368;
+    padding: 5px 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.menu-btn:hover {
+    background-color: #dadce0;
+    color: #202124;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 15px;
+    top: 50px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    z-index: 100;
+    min-width: 140px;
+    padding: 6px 0;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-menu a, 
+.dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 13px;
+    color: #3c4043;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.dropdown-menu a:hover, 
+.dropdown-menu button:hover {
+    background-color: #f1f3f4;
+    color: #0b57d0;
+}
+
+.dropdown-menu .btn-delete {
+    color: #d93025;
+}
+
+.dropdown-menu .btn-delete:hover {
+    background-color: #fce8e6;
+    color: #c5221f;
+}
+
+/* =================================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 600px) {
+    body {
+        padding: 20px 15px;
+    }
+
+    h1 {
+        font-size: 21px;
+    }
+
+    form {
+        width: 100%;
+        margin-right: 0;
+    }
+}
