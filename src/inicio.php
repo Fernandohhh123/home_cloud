@@ -308,6 +308,7 @@ if (
     <head>
         <title>Home cloud - Inicio</title>
         <link rel="stylesheet" href="assets/css/inicio.css">
+        <meta name="viewport" content+"width=device-width, initial-scale=1.0">
     </head>
     <body>
         <h1>Bienvenido, <?php echo htmlspecialchars($usuario_actual, ENT_QUOTES, 'UTF-8'); ?> </h1>
