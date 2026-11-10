@@ -384,8 +384,15 @@ if (
                     echo "<div class='dropdown-menu'>";
                     
                     // Si es un archivo, mostramos la opción de descargar
-                    if(!is_dir($ruta_fisica)){
-                        echo "<a href='descargar.php?file=" . urlencode($ruta_relativa_elemento) . "'>Descargar</a>";
+                    // Opciones de descarga
+                    if(is_dir($ruta_fisica)){
+                        echo "<a href='descargar_carpeta.php?dir=" 
+                            . urlencode($ruta_relativa_elemento) 
+                            . "'>Descargar carpeta (.zip)</a>";
+                    } else {
+                        echo "<a href='descargar.php?file=" 
+                            . urlencode($ruta_relativa_elemento) 
+                            . "'>Descargar</a>";
                     }
                     
                     // Opción de borrar (funciona tanto para archivos como para carpetas)
